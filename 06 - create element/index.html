@@ -1,0 +1,239 @@
+<html>
+  <head>
+    <title>Pure.js #5 - create element</title>
+    <style>
+      pre {
+        margin: 50px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Pure.js #5. Create element</h1>
+
+    <h2>01. innerHTML</h2>
+
+    <div id="container1">Max: <input type="number" value="100" /></div>
+    <button onclick="createChild1()">Add a bit HTML</button>
+
+    <script>
+      function createChild1() {
+        const randomValue = getRandomValue(
+          +document.querySelector("<div id="container1"></div> input").value
+        );
+
+        document.querySelector(
+          "#container1"
+        ).innerHTML += `<div>Random: ${randomValue}</div>`;
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>02. createElement + appendChild</h2>
+
+    <div id="container2">Max: <input type="number" value="100" /></div>
+    <button onclick="createChild2()">Add a bit HTML</button>
+
+    <script>
+      function createChild2() {
+        const randomValue = getRandomValue(
+          +document.querySelector("#container2 input").value
+        );
+
+        const newElement = document.createElement("div");
+        const textNode = document.createTextNode(`Random: ${randomValue}`);
+
+        newElement.appendChild(textNode);
+        document.querySelector("#container2").appendChild(newElement);
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>03. createElement + appendChild (image)</h2>
+
+    <div id="container3"></div>
+    <button onclick="createImage()">Create Image</button>
+    <button onclick="attachImage()">Attach Image</button>
+
+    <script>
+      let image;
+      function createImage() {
+        image = document.createElement("img");
+        image.src =
+          "https://www.thewrap.com/wp-content/uploads/2017/04/JackSparrow.jpg";
+        image.alt = "Johny Depp";
+        image.width = 250;
+      }
+
+      function attachImage() {
+        image && document.querySelector("#container3").appendChild(image);
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>04. insertAdjacentHTML (insertAdjacentElement, insertAdjacentText)</h2>
+
+    <div id="container4" style="border: solid 1px grey; padding: 15px;">
+      Max: <input type="number" value="100" />
+      <select>
+        <option value="beforeBegin">beforeBegin</option>
+        <option value="afterBegin">afterBegin</option>
+        <option value="beforeEnd">beforeEnd</option>
+        <option value="afterEnd">afterEnd</option>
+      </select>
+    </div>
+    <button onclick="createChild4()">Add a bit HTML</button>
+
+    <script>
+      function createChild4() {
+        const randomValue = getRandomValue(
+          +document.querySelector("#container4 input").value
+        );
+        const position = document.querySelector("#container4 select").value;
+
+        document
+          .querySelector("#container4")
+          .insertAdjacentHTML(position, `<div>Random: ${randomValue}</div>`);
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>05. createElement + append/prepend/before/after</h2>
+
+    <div id="container5" style="border: solid 1px grey; padding: 15px;">
+      Max: <input type="number" value="100" />
+      <select>
+        <option value="append">append</option>
+        <option value="prepend">prepend</option>
+        <option value="before">before</option>
+        <option value="after">after</option>
+      </select>
+    </div>
+    <button onclick="createChild5()">Add a bit HTML</button>
+
+    <script>
+      function createChild5() {
+        const randomValue = getRandomValue(
+          +document.querySelector("#container5 input").value
+        );
+        const position = document.querySelector("#container5 select").value;
+
+        const newElement = document.createElement("div");
+        newElement.append(`Random: ${randomValue}`);
+
+        document.querySelector("#container5")[position](newElement);
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>06. DocumentFragment</h2>
+
+    <div id="container6">Children count: <input type="number" value="5" /></div>
+    <button onclick="createChildren6()">Insert children</button>
+
+    <script>
+      function createChildren6() {
+        const count = +document.querySelector("#container6 input").value;
+        const fragment = document.createDocumentFragment();
+
+        for (let i = 0; i < count; i++) {
+          const p = document.createElement("p");
+          p.append(`p ${i}`);
+          fragment.append(p);
+        }
+
+        document.querySelector("#container6").append(fragment);
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>07. move element</h2>
+
+    <table>
+      <tr>
+        <td>
+          <div class="image-container">
+            <img
+              src="https://image.flaticon.com/icons/png/512/97/97895.png"
+              width="48"
+              alt="user"
+            />
+          </div>
+          <button onclick="move(this)">Move</button>
+        </td>
+        <td><button onclick="move(this)">Move</button></td>
+        <td><button onclick="move(this)">Move</button></td>
+      </tr>
+      <tr>
+        <td><button onclick="move(this)">Move</button></td>
+        <td><button onclick="move(this)">Move</button></td>
+        <td><button onclick="move(this)">Move</button></td>
+      </tr>
+      <tr>
+        <td><button onclick="move(this)">Move</button></td>
+        <td><button onclick="move(this)">Move</button></td>
+        <td><button onclick="move(this)">Move</button></td>
+      </tr>
+    </table>
+
+    <script>
+      function move(target) {
+        const imageContainer = target
+          .closest("table")
+          .querySelector(".image-container");
+        target.before(imageContainer);
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>08. copy element</h2>
+
+    <table>
+      <tr>
+        <td>
+          <div class="image-container">
+            <img
+              src="https://image.flaticon.com/icons/png/512/97/97895.png"
+              width="48"
+              alt="user"
+            />
+          </div>
+        </td>
+        <td><button onclick="copy(this)">Copy</button></td>
+        <td><button onclick="copy(this)">Copy</button></td>
+      </tr>
+      <tr>
+        <td><button onclick="copy(this)">Copy</button></td>
+        <td><button onclick="copy(this)">Copy</button></td>
+        <td><button onclick="copy(this)">Copy</button></td>
+      </tr>
+      <tr>
+        <td><button onclick="copy(this)">Copy</button></td>
+        <td><button onclick="copy(this)">Copy</button></td>
+        <td><button onclick="copy(this)">Copy</button></td>
+      </tr>
+    </table>
+
+    <script>
+      function copy(target) {
+        const imageContainer = target
+          .closest("table")
+          .querySelector(".image-container");
+        target.before(imageContainer.cloneNode(true));
+        target.remove();
+      }
+    </script>
+
+    <script>
+      function getRandomValue(max = 100) {
+        return Math.round(Math.random() * max);
+      }
+    </script>
+  </body>
+</html>

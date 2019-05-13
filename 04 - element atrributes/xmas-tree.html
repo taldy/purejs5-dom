@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <title>Pure.js #5 - hierarchy</title>
+    <script>
+      setInterval(() => {
+        const img = document.querySelector("img");
+        img.width = img.width === 500 ? 250 : 500;
+      }, 3000);
+
+      setInterval(() => {
+        document.querySelector("input[type=number]").value = Math.round(
+          Math.random() * 100
+        );
+      }, 720);
+
+      setInterval(() => {
+        document.querySelector("input[type=checkbox]").checked = !!Math.round(
+          Math.random()
+        );
+      }, 450);
+
+      setInterval(() => {
+        document.querySelector("button").disabled = !!Math.round(
+          Math.random()
+        );
+      }, 450);
+
+      setInterval(() => {
+        document.querySelector("progress").value = Math.round(
+          Math.random() * 100
+        );
+      }, 210);
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Pure.js #5. 04 - element attributes</h1>
+
+      <form>
+        <input type="number" value="33" /> <input type="checkbox" checked />
+        <progress value="17" max="100"></progress>
+        <button>Submit</button>
+      </form>
+
+      <img
+        src="https://www.thewrap.com/wp-content/uploads/2017/04/JackSparrow.jpg"
+        width="250"
+      />
+    </div>
+  </body>
+</html>

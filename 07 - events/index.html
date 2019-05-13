@@ -1,0 +1,373 @@
+<html>
+  <head>
+    <title>Pure.js #5 - DOM events</title>
+    <style>
+      pre {
+        margin: 50px 0;
+      }
+
+      .container {
+        padding: 10px;
+        border: solid 1px #ddd;
+        position: relative;
+      }
+
+      legend {
+        position: relative;
+        top: -20px;
+        width: 150px;
+        background: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Pure.js #5. DOM events</h1>
+
+    <h2>01. attach event</h2>
+
+    <div id="container1">
+      <button onclick="notify('attribute')">Attribute</button>
+      <button id="button1">Property</button>
+      <button id="button2">addEventListener</button>
+    </div>
+
+    <script>
+      document.querySelector("#button1").onclick = () => notify("property");
+      document.querySelector("#button2").addEventListener("click", () => notify("addEventListener"));
+      document.querySelector("#button2").addEventListener("click", () =>
+        notify("second addEventListener handler")
+      );
+
+      function notify(text) {
+        console.log(text);
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>02. removeEventListener</h2>
+
+    <div id="container2">
+      <button id="button3">Check it!</button>
+      <button id="button4">Toggle event handler</button>
+    </div>
+
+    <script>
+      let handlerAttached = true;
+      document.querySelector("#button3").addEventListener("click", button3ClickHandler);
+      document.querySelector("#button4").addEventListener("click", () => {
+
+        if (handlerAttached) {
+          document.querySelector("#button3").removeEventListener("click", button3ClickHandler);
+          handlerAttached = false;
+          notify("Event listener removed");
+        } else {
+          document.querySelector("#button3").addEventListener("click", button3ClickHandler);
+          handlerAttached = true;
+          notify("Event listener registered");
+        }
+      });
+
+      function button3ClickHandler() {
+        notify("addEventListener handler");
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>03. event object and event target</h2>
+
+    <div id="container3">
+      <button id="button5">Check it!</button>
+      <button id="button6">Another button with the same handler</button>
+    </div>
+
+    <script>
+      document.querySelector("#button5").addEventListener("click", button5ClickHandler);
+      document.querySelector("#button6").addEventListener("click", button5ClickHandler);
+
+      function button5ClickHandler(event) {
+        console.log(event, event.target);
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>04. event flow</h2>
+
+    <div id="container4" class="container">
+      <legend>container4</legend>
+      <div id="container5" class="container">
+        <legend>container5</legend>
+        <div id="container6" class="container">
+          <legend>container6</legend>
+          <div id="container7" class="container">
+            <legend>container7</legend>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.querySelector("#container4").addEventListener("click", container4DownClickHandler, true);
+      document.querySelector("#container4").addEventListener("click", container4UpClickHandler);
+      document.querySelector("#container5").addEventListener("click", container4DownClickHandler, true);
+      document.querySelector("#container5").addEventListener("click", container4UpClickHandler);
+      document.querySelector("#container6").addEventListener("click", container4DownClickHandler, true);
+      document.querySelector("#container6").addEventListener("click", container4UpClickHandler);
+      document.querySelector("#container7").addEventListener("click", container4DownClickHandler, true);
+      document.querySelector("#container7").addEventListener("click", container4UpClickHandler);
+
+      function container4DownClickHandler(event) {
+        console.log("click", "↓", event.target.id, event.currentTarget.id);
+      }
+
+      function container4UpClickHandler(event) {
+        console.log("click", "↑", event.target.id, event.currentTarget.id);
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>05. stopPropagation</h2>
+
+    <div id="container8" class="container">
+      <legend>
+        ↓<input type="checkbox" name="down" /> container8
+        <input type="checkbox" name="up" />↑
+      </legend>
+      <div id="container9" class="container">
+        <legend>
+          ↓<input type="checkbox" name="down" /> container9
+          <input type="checkbox" name="up" />↑
+        </legend>
+        <div id="container10" class="container">
+          <legend>
+            ↓<input type="checkbox" name="down" /> container10
+            <input type="checkbox" name="up" />↑
+          </legend>
+          <div id="container11" class="container">
+            <legend>
+              ↓<input type="checkbox" name="down" /> container11
+              <input type="checkbox" name="up" />↑
+            </legend>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .querySelector("#container8")
+        .addEventListener("click", container8DownClickHandler, true);
+      document
+        .querySelector("#container8")
+        .addEventListener("click", container8UpClickHandler);
+      document
+        .querySelector("#container9")
+        .addEventListener("click", container8DownClickHandler, true);
+      document
+        .querySelector("#container9")
+        .addEventListener("click", container8UpClickHandler);
+      document
+        .querySelector("#container10")
+        .addEventListener("click", container8DownClickHandler, true);
+      document
+        .querySelector("#container10")
+        .addEventListener("click", container8UpClickHandler);
+      document
+        .querySelector("#container11")
+        .addEventListener("click", container8DownClickHandler, true);
+      document
+        .querySelector("#container11")
+        .addEventListener("click", container8UpClickHandler);
+
+      function container8DownClickHandler(event) {
+        console.log("click", "↓", event.target.id, event.currentTarget.id);
+
+        const stopControl = event.currentTarget.querySelector(
+          "legend input[name=down]"
+        );
+        if (stopControl.checked) {
+          event.stopPropagation();
+        }
+      }
+
+      function container8UpClickHandler(event) {
+        console.log("click", "↑", event.target.id, event.currentTarget.id);
+
+        const stopControl = event.currentTarget.querySelector(
+          "legend input[name=up]"
+        );
+        if (stopControl.checked) {
+          event.stopPropagation();
+        }
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>06. stopImmediatePropagation</h2>
+
+    <div id="container12" class="container">
+      <legend>container12</legend>
+      <div id="container13" class="container">
+        <legend>
+          container13 <input type="checkbox" /> <input type="checkbox" />
+          <input type="checkbox" />
+        </legend>
+      </div>
+    </div>
+
+    <script>
+      document
+        .querySelector("#container12")
+        .addEventListener("click", container12DownClickHandler, true);
+      document
+        .querySelector("#container12")
+        .addEventListener("click", container12UpClickHandler);
+      document
+        .querySelector("#container13")
+        .addEventListener("click", container12DownClickHandler, true);
+      document
+        .querySelector("#container13")
+        .addEventListener("click", container13UpClickHandler.bind(null, 0));
+      document
+        .querySelector("#container13")
+        .addEventListener("click", container13UpClickHandler.bind(null, 1));
+      document
+        .querySelector("#container13")
+        .addEventListener("click", container13UpClickHandler.bind(null, 2));
+
+      function container12DownClickHandler(event) {
+        console.log("click", "↓", event.target.id, event.currentTarget.id);
+      }
+      function container12UpClickHandler(event) {
+        console.log("click", "↑", event.target.id, event.currentTarget.id);
+      }
+      function container13UpClickHandler(handlerIndex, event) {
+        console.log(
+          "click",
+          "↑",
+          event.target.id,
+          event.currentTarget.id,
+          `handler ${handlerIndex}`
+        );
+
+        if (
+          event.currentTarget.querySelectorAll("legend input")[handlerIndex]
+            .checked
+        ) {
+          event.stopImmediatePropagation();
+        }
+      }
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>07. event delegating</h2>
+
+    <div id="container14">
+      <input type="number" value="50" /> <button class="increment">++</button>
+      <button class="increment">++</button>
+      <button class="decrement">--</button>
+      <button class="increment">++</button>
+      <button class="increment">++</button>
+      <button class="increment">++</button>
+      <button class="decrement">--</button>
+      <button class="decrement">--</button>
+      <button class="increment">++</button>
+      <button class="increment">++</button>
+      <button class="decrement">--</button>
+    </div>
+
+    <script>
+      document
+        .querySelector("#container14")
+        .addEventListener("click", event => {
+          const input = document.querySelector("#container14 input");
+
+          if (event.target.matches(".increment")) {
+            input.value = +input.value + 1;
+          } else if (event.target.matches(".decrement")) {
+            input.value -= 1;
+          }
+        });
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>08. event handlers for non existed elements</h2>
+
+    <div id="container15"></div>
+
+    <script>
+      setInterval(() => {
+        const randomValue = getRandomValue();
+
+        const button = document.createElement("button");
+        button.dataset.randomValue = randomValue;
+        button.append(randomValue);
+
+        document.querySelector("#container15").append(button);
+      }, 5000);
+
+      document
+        .querySelector("#container15")
+        .addEventListener("click", event => {
+          console.log("Clicked: ", event.target.dataset.randomValue);
+        });
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>09. preventDefault</h2>
+
+    <a href="https://ardas-it.com" onclick="event.preventDefault()"
+      >ardas-it.com</a
+    >
+
+    <div id="container16">Only English please <input type="text" /></div>
+
+    <script>
+      document
+        .querySelector("#container16 input")
+        .addEventListener("keypress", event => {
+          // console.log(event)
+
+          if (
+            !(
+              (event.key >= "a" && event.key <= "z") ||
+              (event.key >= "A" && event.key <= "Z")
+            )
+          ) {
+            event.preventDefault();
+          }
+        });
+    </script>
+
+    <pre>/////////////////////////////////////////////////////////////////////</pre>
+
+    <h2>10. DOMContentLoaded, load, beforeunload</h2>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", event => {
+        console.log("DOMContentLoaded", new Date());
+      });
+
+      window.onload = function() {
+        console.log("load", new Date());
+      };
+
+      window.onbeforeunload = function() {
+        return "Деякі дні можуть бути не збережені, ви впевнені що бажаєте закрити сторіку?";
+      };
+    </script>
+
+    <script>
+      function getRandomValue(max = 100) {
+        return Math.round(Math.random() * max);
+      }
+    </script>
+  </body>
+</html>

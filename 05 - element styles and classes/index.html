@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>Pure.js #5 - element styles</title>
+    <style>
+      .first {
+        margin: 15px;
+        background: #ddd;
+      }
+
+      .second {
+        margin: 30px;
+        background: magenta;
+      }
+
+      .third {
+        margin: 5px;
+        font-size: 30px;
+        background: yellow;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Pure.js #5. 05 - element styles and classes</h1>
+
+    <button id="toggle-class">Toggle class</button>
+    <button id="change-fontsize">Change fontsize</button>
+
+    <div class="container user-profile">
+      Еней був парубок моторний <br>
+      І хлопець хоч куди козак, <br>
+      Удавсь на всеє зле проворний, <br>
+      Завзятіший од всіх бурлак.
+    </div>
+
+    <script>
+      const el = document.querySelector('.user-profile');
+
+      document.getElementById('toggle-class').onclick = () => {
+        const classes = ['first', 'second', 'third'];
+        el.customClass = (el.customClass || 0) + 1;
+
+        classes.forEach(item => el.classList.remove(item));
+        const newClass = classes[el.customClass % (classes.length +1)];
+        if (newClass) {
+          el.classList.add(newClass);
+        }
+      }
+
+      document.getElementById('change-fontsize').onclick = () => {
+        el.style.fontSize = `${Math.round(Math.random() * 32)+10}px`;
+      }
+    </script>
+  </body>
+</html>

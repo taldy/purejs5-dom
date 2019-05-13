@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>Pure.js #5 - hierarchy</title>
+  </head>
+  <body>
+    <h1>Pure.js #5. 04 - element attributes</h1>
+    <div class="container">
+      <div>
+        <button id="change-width-value">Change width</button>
+        <button id="change-width-attribute">Change attribute</button>
+      </div>
+      <img
+        src="https://www.thewrap.com/wp-content/uploads/2017/04/JackSparrow.jpg"
+        width="250"
+      />
+    </div>
+
+    <div class="container">
+      <input type="text" value="33" />
+      <button id="change-value">Change value</button>
+      <button id="change-attr">Change attribute</button>
+      <button id="change-both">Change both</button>
+    </div>
+
+    <div class="container user" data-user-id="123">
+    </div>
+
+
+    <script>
+      const input = document.querySelector('input');
+      const img = document.querySelector('img');
+
+      document.getElementById('change-value').onclick = () => { input.value = getRandomValue();}
+      document.getElementById('change-attr').onclick = () => { input.setAttribute('value', getRandomValue())}
+      document.getElementById('change-both').onclick = () => {
+        const newValue = getRandomValue();
+        input.value = newValue;
+        input.setAttribute('value', newValue)
+      }
+
+      document.getElementById('change-width-value').onclick = () => { img.width = getRandomValue(500);}
+      document.getElementById('change-width-attribute').onclick = () => { img.setAttribute('width', getRandomValue(500))}
+
+      function getRandomValue(max = 100) {
+        return Math.round(Math.random() * max);
+      }
+    </script>
+  </body>
+</html>
